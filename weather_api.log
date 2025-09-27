@@ -1,0 +1,15 @@
+2025-09-27 04:53:26,190 - WARNING - Missing coordinates for row None
+2025-09-27 04:53:26,191 - ERROR - Weather data columns mismatch
+2025-09-27 04:53:26,194 - ERROR - Peak hour error for row None: 'created_at'
+2025-09-27 04:54:31,236 - WARNING - Geocoding failed for -1.3155876373452897: No result
+2025-09-27 04:54:32,317 - WARNING - Geocoding failed for -0.6518658035954292: No result
+2025-09-27 04:54:33,496 - WARNING - Geocoding failed for 0.01185603015443126: No result
+2025-09-27 04:54:34,566 - WARNING - Geocoding failed for 0.6755778639042918: No result
+2025-09-27 04:54:34,570 - WARNING - Missing coordinates for row None
+2025-09-27 04:54:34,570 - ERROR - Weather data columns mismatch
+2025-09-27 05:02:27,586 - WARNING - Geocoding failed for -1.3155876373452897: No result
+2025-09-27 05:02:28,641 - WARNING - Geocoding failed for -0.6518658035954292: No result
+2025-09-27 05:02:29,781 - WARNING - Geocoding failed for 0.01185603015443126: No result
+2025-09-27 05:02:30,850 - WARNING - Geocoding failed for 0.6755778639042918: No result
+2025-09-27 05:02:30,859 - WARNING - Missing coordinates for row None
+2025-09-27 05:02:30,860 - ERROR - Weather data columns mismatch
