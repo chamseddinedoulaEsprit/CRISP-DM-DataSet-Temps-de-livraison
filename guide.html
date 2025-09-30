@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide de Démarrage - Delivery Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            color: #2e7d32;
+        }
+        pre {
+            background-color: #e0f2f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="emoji">🟢 Guide de Démarrage - Delivery Prediction</h1>
+
+    <div class="section">
+        <h2>Option 1 : Manuel (le plus simple sous Windows)</h2>
+        <p>Ouvre <strong>PowerShell</strong> et va dans ton dossier :</p>
+        <pre>cd "C:\Users\chams\OneDrive\Bureau\projetPIDEV\CRISP-DM-DataSet-Temps-de-livraison"</pre>
+
+        <p>Installe les dépendances :</p>
+        <pre>pip install -r requirements.txt</pre>
+
+        <p>Lance l’application :</p>
+        <pre>python run.py</pre>
+
+        <p>➡️ L’API sera disponible ici : <a href="http://localhost:5000" target="_blank">http://localhost:5000</a></p>
+    </div>
+
+    <div class="section">
+        <h2>Notes :</h2>
+        <ul>
+            <li>Assurez-vous que les fichiers <strong>lightgbm_model.pkl</strong> et <strong>dbscan_model.pkl</strong> sont dans le même dossier que <strong>run.py</strong>.</li>
+            <li>Le mode debug est activé, pratique pour le développement.</li>
+            <li>Pour arrêter l’application, pressez <strong>CTRL + C</strong> dans PowerShell.</li>
+        </ul>
+    </div>
+</body>
+</html>

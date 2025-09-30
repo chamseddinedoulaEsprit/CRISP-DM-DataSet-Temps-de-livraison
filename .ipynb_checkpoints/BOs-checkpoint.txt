@@ -1,0 +1,11 @@
+Objectifs Métiers (Business Objectives - BO)
+
+BO1 : Prédire le temps de livraison – Estimer précisément combien de temps prendra chaque livraison pour fournir un horaire fiable aux clients, réduisant les frustrations et améliorant la satisfaction globale.
+BO2 : Regrouper les commandes – Segmenter les commandes en groupes similaires pour mieux organiser et assigner les livreurs, améliorant l'efficacité logistique.
+BO3 : Simplifier les données – Résumer les informations clés du dataset en un nombre réduit de variables, facilitant les analyses futures sans perte significative d'information.
+
+Objectifs Data Science
+
+Pour BO1 : Régression supervisée pour prédire la variable cible "temps de livraison" (différence en minutes entre actual_delivery_time et created_at), avec features comme market_id, store_primary_category, total_items, subtotal, total_onshift_partners ; modèles : régression linéaire, random forest, gradient boosting ; métriques : MAE, RMSE.
+Pour BO2 : Clustering non supervisé pour segmenter les commandes via features comme market_id, created_at, total_items, total_outstanding_orders ; algorithmes : K-means, DBSCAN ; validation : elbow method, silhouette score.
+Pour BO3 : Réduction de dimensionnalité sur features numériques (subtotal, min_item_price, etc.) pour conserver 80-90 % de variance ; algorithmes : PCA, t-SNE ; prétraitement : normalisation, imputation.
