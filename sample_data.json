@@ -1,0 +1,114 @@
+{
+  "sample_requests": [
+    {
+      "name": "Commande Restaurant Standard",
+      "data": {
+        "market_id": 1,
+        "store_id": 150,
+        "store_primary_category": "Restaurant",
+        "total_items": 3,
+        "subtotal": 28.50,
+        "num_distinct_items": 3,
+        "total_onshift_partners": 8,
+        "delivery_duration_min": 25,
+        "day_of_week_numeric": 3,
+        "hour_of_day": 19,
+        "price_range": "Mid-range",
+        "weather_condition": "Clear",
+        "temperature": 22.0
+      }
+    },
+    {
+      "name": "Commande Grocery Premium",
+      "data": {
+        "market_id": 2,
+        "store_id": 75,
+        "store_primary_category": "Grocery",
+        "total_items": 15,
+        "subtotal": 125.75,
+        "num_distinct_items": 12,
+        "total_onshift_partners": 3,
+        "delivery_duration_min": 45,
+        "day_of_week_numeric": 6,
+        "hour_of_day": 10,
+        "price_range": "Premium",
+        "weather_condition": "Rainy",
+        "temperature": 15.5
+      }
+    },
+    {
+      "name": "Commande Fast Food Budget",
+      "data": {
+        "market_id": 3,
+        "store_id": 225,
+        "store_primary_category": "Fast Food",
+        "total_items": 2,
+        "subtotal": 12.99,
+        "num_distinct_items": 2,
+        "total_onshift_partners": 12,
+        "delivery_duration_min": 15,
+        "day_of_week_numeric": 1,
+        "hour_of_day": 12,
+        "price_range": "Budget",
+        "weather_condition": "Cloudy",
+        "temperature": 18.0
+      }
+    },
+    {
+      "name": "Commande Pharmacy Urgente",
+      "data": {
+        "market_id": 1,
+        "store_id": 88,
+        "store_primary_category": "Pharmacy",
+        "total_items": 5,
+        "subtotal": 45.20,
+        "num_distinct_items": 4,
+        "total_onshift_partners": 4,
+        "delivery_duration_min": 20,
+        "day_of_week_numeric": 7,
+        "hour_of_day": 21,
+        "price_range": "Mid-range",
+        "weather_condition": "Clear",
+        "temperature": 25.0
+      }
+    },
+    {
+      "name": "Commande Coffee Shop Matin",
+      "data": {
+        "market_id": 2,
+        "store_id": 312,
+        "store_primary_category": "Coffee Shop",
+        "total_items": 1,
+        "subtotal": 4.50,
+        "num_distinct_items": 1,
+        "total_onshift_partners": 6,
+        "delivery_duration_min": 10,
+        "day_of_week_numeric": 2,
+        "hour_of_day": 8,
+        "price_range": "Budget",
+        "weather_condition": "Foggy",
+        "temperature": 12.0
+      }
+    }
+  ],
+  "field_descriptions": {
+    "market_id": "Identifiant unique du marché/zone géographique",
+    "store_id": "Identifiant unique du magasin",
+    "store_primary_category": "Catégorie principale du magasin",
+    "total_items": "Nombre total d'articles dans la commande",
+    "subtotal": "Montant total de la commande en euros",
+    "num_distinct_items": "Nombre d'articles distincts/uniques",
+    "total_onshift_partners": "Nombre de livreurs disponibles",
+    "delivery_duration_min": "Durée estimée de livraison en minutes",
+    "day_of_week_numeric": "Jour de la semaine (1=Lundi, 7=Dimanche)",
+    "hour_of_day": "Heure de la journée (0-23)",
+    "price_range": "Gamme de prix du magasin",
+    "weather_condition": "Condition météorologique",
+    "temperature": "Température ambiante en degrés Celsius"
+  },
+  "expected_outputs": {
+    "lightgbm_prediction": "Temps de livraison prédit en minutes (nombre décimal)",
+    "dbscan_cluster": "Numéro de cluster (-1 pour outlier, 0+ pour clusters normaux)",
+    "cluster_interpretation": "Interprétation textuelle du cluster"
+  }
+}
