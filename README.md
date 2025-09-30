@@ -1,610 +1,301 @@
 # Delivery Time Estimation Project
 
-This project is focused on predicting delivery times for a leading intra-city logistics company in India. The project is implemented using the **CRISP-DM methodology** on a dataset of **172,000 rows** (`datadelevry.xlsx`).
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](https://www.docker.com/)
 
----
+This project develops a machine learning solution to predict delivery times for a leading intra-city logistics company in India, operating within the $40 billion intra-city logistics sector. The project follows the **CRISP-DM (Cross-Industry Standard Process for Data Mining)** methodology and utilizes a dataset of **172,000 rows** (`datadelevry.xlsx`) to build and deploy predictive models.
 
 ## Project Overview
 
-This delivery company (our client) is India's foremost marketplace for intra-city logistics, spearheading innovation in the nation's $40 billion intra-city logistics sector. With a mission to enhance the livelihoods of over **150,000 driver-partners**, our client ensures consistent earnings and fosters independence among its workforce. Currently, the company boasts a customer base exceeding **5 million**.
+The client, a premier marketplace for intra-city logistics in India, supports over 150,000 driver-partners by ensuring consistent earnings and fostering independence. With a customer base exceeding 5 million, the company collaborates with various restaurants to facilitate direct delivery of goods. The primary goal is to provide accurate delivery time estimations based on order details, location, and available delivery partners.
 
-Collaborating with a diverse array of restaurants, the company facilitates the direct delivery of their goods to consumers. Leveraging a network of delivery partners sourced from various eateries, our client seeks to provide customers with **accurate estimated delivery times** based on factors such as their order, location, and available delivery partners.
-
----
-
-## Associated Tasks
-
-- **Regression**: Prediction of the delivery time estimation.
-
----
+### Objectives
+- **Regression**: Predict delivery time in minutes using machine learning models.
+- **Clustering**: Classify orders into meaningful groups for operational insights.
 
 ## Data Description
 
-The dataset `datadelevry.xlsx` contains **172,000 rows**, each corresponding to a unique delivery. Each column represents a feature as described below:
+The dataset (`datadelevry.xlsx`) contains **172,000 rows**, each representing a unique delivery with the following features:
 
-| Column Name | Description |
-|-------------|-------------|
-| `market_id` | Integer ID for the market where the restaurant lies |
-| `created_at` | Timestamp when the order was placed |
-| `actual_delivery_time` | Timestamp when the order was delivered |
-| `store_primary_category` | Category of the restaurant |
-| `order_protocol` | Integer code for order protocol (e.g., via porter, call to restaurant, pre-booked, third party) |
-| `total_items_subtotal` | Final price of the order |
-| `num_distinct_items` | Number of distinct items in the order |
-| `min_item_price` | Price of the cheapest item in the order |
-| `max_item_price` | Price of the costliest item in the order |
-| `total_onshift_partners` | Number of delivery partners on duty at the time the order was placed |
-| `total_busy_partners` | Number of delivery partners attending other tasks |
-| `total_outstanding_orders` | Total number of orders to be fulfilled at that moment |
-
----
+| Column Name                | Description                                                                 |
+|----------------------------|-----------------------------------------------------------------------------|
+| `market_id`                | Integer ID of the market where the restaurant is located                    |
+| `created_at`               | Timestamp when the order was placed                                         |
+| `actual_delivery_time`     | Timestamp when the order was delivered                                      |
+| `store_primary_category`   | Category of the restaurant (e.g., Italian, Indian)                          |
+| `order_protocol`           | Integer code for order protocol (e.g., porter, call, pre-booked, third-party) |
+| `total_items_subtotal`     | Final price of the order                                                   |
+| `num_distinct_items`       | Number of distinct items in the order                                      |
+| `min_item_price`           | Price of the cheapest item in the order                                    |
+| `max_item_price`           | Price of the costliest item in the order                                   |
+| `total_onshift_partners`   | Number of delivery partners on duty at the time of order placement          |
+| `total_busy_partners`      | Number of delivery partners attending other tasks                           |
+| `total_outstanding_orders` | Total number of orders pending fulfillment at the time of order placement   |
 
 ## Methodology
 
-The project follows the **CRISP-DM (Cross-Industry Standard Process for Data Mining)** methodology, which includes the following phases:
+The project adheres to the **CRISP-DM** methodology, with the following phases:
+1. **Business Understanding**: Define objectives and deliverables to meet the client's need for accurate delivery time predictions.
+2. **Data Understanding**: Explore and analyze the dataset to identify patterns and relationships.
+3. **Data Preparation**: Clean, preprocess, and transform data (e.g., feature engineering, handling missing values).
+4. **Modeling**: Develop regression models (e.g., LightGBM) for delivery time prediction and clustering models (e.g., DBSCAN) for order classification.
+5. **Evaluation**: Assess model performance using metrics such as RMSE and MAE for regression, and silhouette score for clustering.
+6. **Deployment**: Integrate the predictive model into production systems with actionable recommendations.
 
-1. **Business Understanding** – Define project objectives and deliverables.
-2. **Data Understanding** – Explore and describe the dataset.
-3. **Data Preparation** – Clean, format, and transform data for analysis.
-4. **Modeling** – Apply regression models to predict delivery times.
-5. **Evaluation** – Assess model performance and validate results.
-6. **Deployment** – Provide recommendations for integrating the predictive model.
+## Web Application
 
----
+The project includes a **Flask-based web application** for real-time delivery time predictions and order clustering, leveraging two machine learning models:
+- **LightGBM**: Predicts delivery time in minutes.
+- **DBSCAN**: Clusters orders based on features for operational insights.
 
-## Usage
+### Features
+- **User Interface**: Responsive web interface built with Bootstrap 5, featuring an intuitive form for inputting order details and real-time prediction results.
+- **Predictions**:
+  - Delivery time in minutes (LightGBM).
+  - Cluster classification with interpretable labels (DBSCAN).
+- **Data Validation**: Robust client-side and server-side validation to ensure reliable input handling.
+- **API Endpoints**:
+  - `GET /`: Main page with the input form.
+  - `POST /predict`: Returns predictions in JSON format.
+  - `GET /health`: Checks application and model status.
 
-1. Load the dataset `datadelevry.xlsx` into your preferred Python environment (e.g., Pandas).
-2. Explore and preprocess the data.
-3. Train regression models to predict delivery times.
-4. Evaluate model performance using appropriate metrics (e.g., RMSE, MAE).
-5. Deploy the model to estimate delivery times for future orders.
+### Input Features
+The application accepts the following 13 input variables:
 
----
+| Variable                   | Type   | Description                              |
+|----------------------------|--------|------------------------------------------|
+| `market_id`                | int    | Market identifier                        |
+| `store_id`                 | int    | Store identifier                         |
+| `store_primary_category`   | str    | Store category (e.g., Restaurant)        |
+| `total_items`              | int    | Total number of items                    |
+| `subtotal`                 | float  | Order subtotal                           |
+| `num_distinct_items`       | int    | Number of distinct items                 |
+| `total_onshift_partners`   | int    | Number of available delivery partners     |
+| `delivery_duration_min`    | float  | Estimated delivery duration               |
+| `day_of_week_numeric`      | int    | Day of the week (1–7)                    |
+| `hour_of_day`              | int    | Hour of the day (0–23)                   |
+| `price_range`              | str    | Price range (e.g., Budget, Mid-range)    |
+| `weather_condition`        | str    | Weather condition (e.g., Clear, Cloudy)  |
+| `temperature`              | float  | Temperature in °C                        |
+
+## Project Structure
+
+```
+delivery-prediction-app/
+├── app.py                    # Main Flask application
+├── run.py                    # Startup script with validation checks
+├── test_app.py               # Automated tests
+├── templates/
+│   └── index.html            # Responsive web interface
+├── requirements.txt          # Python dependencies
+├── .env.example             # Environment variable template
+├── nginx.conf               # Nginx configuration (optional)
+├── Dockerfile               # Docker image configuration
+├── docker-compose.yml       # Docker Compose for orchestration
+├── deploy.sh                 # Automated deployment script
+├── README.md                # Project documentation
+├── QUICK_START.md           # Quick start guide
+├── PROJECT_STRUCTURE.md     # Project structure overview
+├── sample_data.json         # Sample data for testing
+├── lightgbm_model.pkl       # LightGBM model (to be added)
+└── dbscan_model.pkl         # DBSCAN model (to be added)
+```
 
 ## Requirements
 
-- Python 3.x
-- Pandas
-- NumPy
-- Scikit-learn
-- Matplotlib / Seaborn (for visualization)
-- Jupyter Notebook (optional)
+- **Python**: 3.8 or higher
+- **Libraries**: `pandas`, `numpy`, `scikit-learn`, `lightgbm`, `flask`, `gunicorn` (for production)
+- **Optional**: `matplotlib`, `seaborn` (for visualization), Jupyter Notebook (for data exploration)
+- **Docker**: For containerized deployment
 
----
-# Application Web Flask - Prédiction de Livraison 🚚
+## Installation
 
-Cette application web utilise deux modèles de machine learning pour analyser et prédire les livraisons :
-- **LightGBM** : Prédiction du temps de livraison en minutes
-- **DBSCAN** : Classification par clustering des commandes
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/chamseddinedoulaEsprit/CRISP-DM-DataSet-Temps-de-livraison.git
+   cd CRISP-DM-DataSet-Temps-de-livraison
+   ```
 
-## 📁 Structure du Projet
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```
-├── app.py                 # Application Flask principale
-├── run.py                 # Script de démarrage
-├── requirements.txt       # Dépendances Python
-├── README.md             # Documentation
-├── .env.example          # Variables d'environnement
-├── templates/
-│   └── index.html        # Interface utilisateur
-├── lightgbm_model.pkl    # Modèle LightGBM (à ajouter)
-└── dbscan_model.pkl      # Modèle DBSCAN (à ajouter)
-```
+3. **Add Machine Learning Models**:
+   - Place `lightgbm_model.pkl` and `dbscan_model.pkl` in the project root directory.
 
-## 🔧 Installation
+4. **Configure Environment (Optional)**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` to set `HOST`, `PORT`, and `DEBUG` as needed.
 
-### 1. Cloner ou télécharger le projet
-```bash
-# Si vous avez les fichiers dans un dossier
-cd votre-dossier-projet
-```
+## Running the Application
 
-### 2. Installer les dépendances
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Ajouter vos modèles
-Placez vos fichiers de modèles dans le répertoire principal :
-- `lightgbm_model.pkl`
-- `dbscan_model.pkl`
-
-### 4. Configuration (optionnel)
-```bash
-cp .env.example .env
-# Éditez .env selon vos besoins
-```
-
-## 🚀 Démarrage
-
-### Méthode 1 : Script de démarrage
+### Option 1: Local Development
 ```bash
 python run.py
 ```
 
-### Méthode 2 : Flask direct
-```bash
-python app.py
-```
-
-### Méthode 3 : Variables d'environnement
+### Option 2: Flask Direct
 ```bash
 export FLASK_APP=app.py
 export FLASK_ENV=development
 flask run --host=0.0.0.0 --port=5000
 ```
 
-## 🌐 Accès à l'Application
-
-Une fois démarrée, l'application est accessible à :
-- **Local** : http://localhost:5000
-- **Réseau** : http://votre-ip:5000
-
-## 📊 Fonctionnalités
-
-### Interface Utilisateur
-- **Formulaire intuitif** avec tous les champs nécessaires
-- **Design responsive** compatible mobile/desktop
-- **Validation des données** côté client et serveur
-- **Affichage des résultats** en temps réel
-
-### Prédictions Disponibles
-1. **Temps de livraison** (LightGBM)
-   - Prédiction en minutes
-   - Format lisible (heures/minutes)
-
-2. **Classification des commandes** (DBSCAN)
-   - Identification du cluster
-   - Interprétation du type de commande
-
-### Champs de Données
-L'application accepte ces 13 variables :
-- `market_id` : ID du marché
-- `store_id` : ID du magasin
-- `store_primary_category` : Catégorie du magasin
-- `total_items` : Nombre total d'articles
-- `subtotal` : Sous-total de la commande
-- `num_distinct_items` : Nombre d'articles distincts
-- `total_onshift_partners` : Nombre de livreurs disponibles
-- `delivery_duration_min` : Durée estimée de livraison
-- `day_of_week_numeric` : Jour de la semaine (1-7)
-- `hour_of_day` : Heure de la journée (0-23)
-- `price_range` : Gamme de prix
-- `weather_condition` : Condition météorologique
-- `temperature` : Température en °C
-
-## 🔧 Personnalisation
-
-### Modifier les Catégories
-Dans `app.py`, vous pouvez ajuster :
-```python
-STORE_CATEGORIES = ['Restaurant', 'Grocery', ...]
-WEATHER_CONDITIONS = ['Clear', 'Cloudy', ...]
-PRICE_RANGES = ['Budget', 'Mid-range', ...]
-```
-
-### Préprocessing des Données
-La fonction `preprocess_features()` dans `app.py` doit être adaptée selon votre preprocessing original :
-```python
-def preprocess_features(df):
-    # Adaptez cette fonction selon votre preprocessing
-    # Encodage, normalisation, feature engineering, etc.
-    return df_processed
-```
-
-### Interprétation des Clusters
-Modifiez `interpret_cluster()` selon votre analyse DBSCAN :
-```python
-def interpret_cluster(cluster_id):
-    interpretations = {
-        -1: "Commande atypique",
-        0: "Commande standard",
-        # Ajoutez vos interprétations
-    }
-    return interpretations.get(cluster_id, f"Cluster {cluster_id}")
-```
-
-## 🐛 Résolution de Problèmes
-
-### Modèles non trouvés
-```
-Erreur: Les fichiers de modèles n'ont pas été trouvés
-```
-**Solution** : Vérifiez que `lightgbm_model.pkl` et `dbscan_model.pkl` sont dans le répertoire principal.
-
-### Erreur de prédiction
-```
-Erreur LightGBM/DBSCAN: ...
-```
-**Solutions** :
-1. Vérifiez le preprocessing dans `preprocess_features()`
-2. Assurez-vous que les colonnes correspondent à celles d'entraînement
-3. Vérifiez les types de données
-
-### Port déjà utilisé
-```
-Address already in use
-```
-**Solution** : Changez le port dans `.env` ou utilisez :
-```bash
-python run.py
-# Ou définissez PORT=5001 dans les variables d'environnement
-```
-
-## 📡 API Endpoints
-
-### GET /
-Page principale avec le formulaire
-
-### POST /predict
-Endpoint de prédiction
-```json
-{
-  "market_id": 1,
-  "store_id": 1,
-  "store_primary_category": "Restaurant",
-  // ... autres champs
-}
-```
-
-**Réponse** :
-```json
-{
-  "success": true,
-  "predictions": {
-    "delivery_time_minutes": 25.5,
-    "delivery_time_formatted": "25min",
-    "cluster": 0,
-    "cluster_interpretation": "Commande standard"
-  }
-}
-```
-
-### GET /health
-Vérification de l'état de l'application
-
-## 🛡️ Sécurité
-
-- Validation des données d'entrée
-- Gestion des erreurs robuste
-- Pas d'exposition des détails internes
-- Protection contre les injections
-
-## 📈 Monitoring
-
-L'endpoint `/health` permet de vérifier :
-- État de l'application
-- Chargement des modèles
-- Horodatage
-
-## 🚀 Déploiement en Production
-
-### Avec Gunicorn
-```bash
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
-```
-
-### Avec uWSGI
-```bash
-pip install uwsgi
-uwsgi --http :5000 --wsgi-file app.py --callable app --processes 4
-```
-
-### Variables d'Environnement de Production
-```bash
-export FLASK_ENV=production
-export DEBUG=False
-```
-
-## 📝 Notes Importantes
-
-1. **Preprocessing** : Adaptez la fonction `preprocess_features()` selon votre pipeline original
-2. **Modèles** : Assurez-vous que vos modèles sont compatibles avec les versions de libraries
-3. **Sécurité** : En production, désactivez le mode debug
-4. **Performance** : Pour de gros volumes, considérez une mise en cache des prédictions
-
-## 📧 Support
-
-Pour des questions techniques ou des améliorations, consultez les commentaires dans le code ou adaptez selon vos besoins spécifiques.
-
-# 📁 Structure du Projet - Application Flask de Prédiction de Livraison
-
-```
-delivery-prediction-app/
-│
-├── 🐍 FICHIERS PYTHON
-│   ├── app.py                    # Application Flask principale
-│   ├── run.py                    # Script de démarrage avec vérifications
-│   └── test_app.py              # Tests automatisés de l'application
-│
-├── 🌐 INTERFACE UTILISATEUR
-│   └── templates/
-│       └── index.html           # Interface web responsive avec Bootstrap
-│
-├── ⚙️ CONFIGURATION
-│   ├── requirements.txt         # Dépendances Python
-│   ├── .env.example            # Variables d'environnement (template)
-│   └── nginx.conf              # Configuration Nginx (optionnel)
-│
-├── 🐳 DOCKER
-│   ├── Dockerfile              # Image Docker de l'application
-│   └── docker-compose.yml      # Orchestration multi-conteneurs
-│
-├── 📜 SCRIPTS
-│   └── deploy.sh               # Script de déploiement automatisé
-│
-├── 📚 DOCUMENTATION
-│   ├── README.md               # Documentation complète
-│   ├── QUICK_START.md          # Guide de démarrage rapide
-│   └── PROJECT_STRUCTURE.md    # Ce fichier
-│
-├── 📊 DONNÉES EXEMPLE
-│   └── sample_data.json        # Exemples de données pour tests
-│
-└── 🤖 MODÈLES ML (À AJOUTER)
-    ├── lightgbm_model.pkl      # Modèle LightGBM pour prédiction temps
-    └── dbscan_model.pkl        # Modèle DBSCAN pour clustering
-```
-
-## 🎯 Composants Principaux
-
-### 1. **Application Flask** (`app.py`)
-- ✅ Endpoints pour prédiction et health check
-- ✅ Chargement automatique des modèles
-- ✅ Preprocessing des données
-- ✅ Gestion d'erreurs robuste
-- ✅ API REST JSON
-
-### 2. **Interface Web** (`templates/index.html`)
-- ✅ Design moderne avec Bootstrap 5
-- ✅ Formulaire interactif avec validation
-- ✅ Affichage des résultats en temps réel
-- ✅ Interface responsive mobile/desktop
-- ✅ Icons Font Awesome
-
-### 3. **Scripts Utilitaires**
-- ✅ `run.py` : Démarrage avec vérifications
-- ✅ `test_app.py` : Tests automatisés
-- ✅ `deploy.sh` : Déploiement automatisé
-
-### 4. **Containerisation Docker**
-- ✅ Multi-stage build optimisé
-- ✅ Health checks intégrés
-- ✅ Nginx reverse proxy
-- ✅ Configuration de production
-
-## 🔧 Flux de Données
-
-```
-Utilisateur → Interface Web → Flask App → Preprocessing → Modèles ML → Résultats
-    ↑                                                                        ↓
-    └─────────────────── Affichage des Prédictions ←─────────────────────────┘
-```
-
-## 📈 Fonctionnalités
-
-### ✅ Prédictions Disponibles
-- **LightGBM** : Temps de livraison en minutes
-- **DBSCAN** : Classification par clusters
-
-### ✅ Sécurité & Robustesse
-- Validation des données d'entrée
-- Gestion d'erreurs complète
-- Logs structurés
-- Health checks
-
-### ✅ Déploiement
-- Environnement virtuel Python
-- Containerisation Docker
-- Configuration Nginx
-- Scripts automatisés
-
-### ✅ Monitoring
-- Health check endpoint
-- Tests automatisés
-- Logs détaillés
-
-## 🚀 Options de Démarrage
-
-### **1. Développement Local**
-```bash
-python run.py
-```
-
-### **2. Déploiement Automatisé**
-```bash
-./deploy.sh
-```
-
-### **3. Container Docker**
+### Option 3: Docker
 ```bash
 docker-compose up -d
 ```
 
-### **4. Tests**
+Access the application at:
+- **Local**: `http://localhost:5000`
+- **Network**: `http://<your-ip>:5000`
+
+## Deployment
+
+### Production Deployment
+1. **With Gunicorn**:
+   ```bash
+   pip install gunicorn
+   gunicorn -w 4 -b 0.0.0.0:5000 app:app
+   ```
+
+2. **With Docker**:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Environment Variables**:
+   ```bash
+   export FLASK_ENV=production
+   export DEBUG=False
+   ```
+
+### Security Considerations
+- Enable HTTPS in production.
+- Disable debug mode (`DEBUG=False`).
+- Validate all input data to prevent injection attacks.
+- Use structured logging for monitoring.
+
+## Customization
+
+1. **Preprocessing**:
+   - Modify `preprocess_features()` in `app.py` to align with the original data pipeline (e.g., encoding, scaling).
+   ```python
+   def preprocess_features(df):
+       # Adapt according to your preprocessing pipeline
+       # Encoding, normalization, feature engineering, etc.
+       return df_processed
+   ```
+
+2. **Categories**:
+   - Update lists in `app.py`:
+     ```python
+     STORE_CATEGORIES = ['Restaurant', 'Grocery', ...]
+     WEATHER_CONDITIONS = ['Clear', 'Cloudy', ...]
+     PRICE_RANGES = ['Budget', 'Mid-range', ...]
+     ```
+
+3. **Cluster Interpretation**:
+   - Adjust `interpret_cluster()` in `app.py`:
+     ```python
+     def interpret_cluster(cluster_id):
+         interpretations = {
+             -1: "Atypical Order",
+             0: "Standard Order",
+         }
+         return interpretations.get(cluster_id, f"Cluster {cluster_id}")
+     ```
+
+## API Endpoints
+
+1. **GET /**:
+   - Renders the main page with the input form.
+
+2. **POST /predict**:
+   - **Request**:
+     ```json
+     {
+       "market_id": 1,
+       "store_id": 100,
+       "store_primary_category": "Restaurant",
+       "total_items": 3,
+       "subtotal": 25.50,
+       "num_distinct_items": 2,
+       "total_onshift_partners": 5,
+       "delivery_duration_min": 30.0,
+       "day_of_week_numeric": 3,
+       "hour_of_day": 19,
+       "price_range": "Mid-range",
+       "weather_condition": "Clear",
+       "temperature": 22.5
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "predictions": {
+         "delivery_time_minutes": 25.5,
+         "delivery_time_formatted": "25min",
+         "cluster": 0,
+         "cluster_interpretation": "Standard Order"
+       }
+     }
+     ```
+
+3. **GET /health**:
+   - Returns application status and model availability.
+
+## Testing
+
+Run automated tests to validate functionality:
 ```bash
 python test_app.py
 ```
 
-## 📊 Variables d'Entrée
-
-L'application accepte **13 variables** correspondant aux colonnes de votre dataset :
-
-| Variable | Type | Description |
-|----------|------|-------------|
-| `market_id` | int | Identifiant du marché |
-| `store_id` | int | Identifiant du magasin |
-| `store_primary_category` | str | Catégorie du magasin |
-| `total_items` | int | Nombre total d'articles |
-| `subtotal` | float | Sous-total de la commande |
-| `num_distinct_items` | int | Articles distincts |
-| `total_onshift_partners` | int | Livreurs disponibles |
-| `delivery_duration_min` | float | Durée estimée |
-| `day_of_week_numeric` | int | Jour de la semaine (1-7) |
-| `hour_of_day` | int | Heure (0-23) |
-| `price_range` | str | Gamme de prix |
-| `weather_condition` | str | Condition météo |
-| `temperature` | float | Température (°C) |
-
-## 🔄 Workflow de Développement
-
-1. **Développement** → Tests locaux avec `test_app.py`
-2. **Validation** → Déploiement avec `deploy.sh`
-3. **Production** → Container Docker avec `docker-compose`
-4. **Monitoring** → Health checks et logs
-
-## 🛠️ Personnalisation
-
-### Points de Personnalisation Principaux :
-- **`preprocess_features()`** : Adapter selon votre preprocessing
-- **Catégories** : Modifier les listes dans `app.py`
-- **Interprétations** : Adapter `interpret_cluster()`
-- **Style** : Modifier le CSS dans `index.html`
-
-## 📝 Notes Importantes
-
-- ⚠️ **Modèles requis** : Placez vos `.pkl` dans le répertoire racine
-- ⚠️ **Preprocessing** : Adaptez selon votre pipeline original
-- ⚠️ **Production** : Désactivez le mode debug
-- ⚠️ **Sécurité** : Utilisez HTTPS en production
-
-- # 🚀 Guide de Démarrage Rapide
-
-## Installation Express
-
-### 1. Préparation
+For a specific port:
 ```bash
-# Placez vos fichiers .pkl dans ce dossier
-cp /chemin/vers/lightgbm_model.pkl .
-cp /chemin/vers/dbscan_model.pkl .
-```
-
-### 2. Déploiement automatique
-```bash
-./deploy.sh
-```
-
-### 3. Démarrage manuel
-```bash
-pip install -r requirements.txt
-python run.py
-```
-
-## 🐳 Déploiement Docker
-
-### Option 1 : Docker Compose (Recommandé)
-```bash
-# Avec Nginx reverse proxy
-docker-compose up -d
-
-# Application seule
-docker-compose up -d delivery-prediction-app
-```
-
-### Option 2 : Docker Direct
-```bash
-# Build
-docker build -t delivery-prediction .
-
-# Run
-docker run -d -p 5000:5000 \
-    -v $(pwd)/lightgbm_model.pkl:/app/lightgbm_model.pkl:ro \
-    -v $(pwd)/dbscan_model.pkl:/app/dbscan_model.pkl:ro \
-    --name delivery-app delivery-prediction
-```
-
-## 🧪 Tests
-
-```bash
-# Test complet
-python test_app.py
-
-# Test sur port personnalisé
 python test_app.py 8000
+```
 
-# Health check rapide
+Check application health:
+```bash
 curl http://localhost:5000/health
 ```
 
-## 🌐 Accès
+## Troubleshooting
 
-- **Application** : http://localhost:5000
-- **API Health** : http://localhost:5000/health
-- **Avec Nginx** : http://localhost:80
+| Issue                     | Solution                                                                 |
+|---------------------------|--------------------------------------------------------------------------|
+| Models not found          | Ensure `lightgbm_model.pkl` and `dbscan_model.pkl` are in the project root. |
+| Prediction errors         | Verify `preprocess_features()` matches the training pipeline.             |
+| Port already in use       | Update `PORT` in `.env` (e.g., `PORT=5001`).                             |
+| Docker errors             | Check logs with `docker-compose logs`.                                   |
 
-## 📱 Utilisation
+## Notes
 
-1. Ouvrez l'interface web
-2. Remplissez le formulaire avec vos données
-3. Cliquez sur "Prédire"
-4. Obtenez :
-   - Temps de livraison prédit (minutes)
-   - Classification par cluster
+- Ensure model files are compatible with the installed library versions.
+- Adapt preprocessing to match the training pipeline for accurate predictions.
+- Use caching for high-volume predictions to improve performance.
+- Monitor the `/health` endpoint for application status in production.
 
-## 🔧 Configuration Rapide
+## Contributing
 
-### Variables d'environnement
-```bash
-export HOST=0.0.0.0
-export PORT=5000
-export DEBUG=False
-```
+Contributions are welcome! Please follow these steps:
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m 'Add your feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
 
-### Fichier .env
-```
-HOST=0.0.0.0
-PORT=5000
-DEBUG=True
-```
+## License
 
-## ⚡ Commandes Utiles
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-```bash
-# Arrêter Docker
-docker-compose down
+## Support
 
-# Voir les logs
-docker-compose logs -f
-
-# Restart
-docker-compose restart
-
-# Status
-docker-compose ps
-```
-
-## 🆘 Dépannage Express
-
-| Problème | Solution |
-|----------|----------|
-| Port 5000 occupé | Changez `PORT=5001` dans .env |
-| Modèles non trouvés | Vérifiez les fichiers .pkl dans le dossier |
-| Erreur de prédiction | Adaptez `preprocess_features()` dans app.py |
-| Erreur Docker | Vérifiez `docker-compose logs` |
-
-## 📞 Test API Direct
-
-```bash
-curl -X POST http://localhost:5000/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "market_id": 1,
-    "store_id": 100,
-    "store_primary_category": "Restaurant",
-    "total_items": 3,
-    "subtotal": 25.50,
-    "num_distinct_items": 2,
-    "total_onshift_partners": 5,
-    "delivery_duration_min": 30,
-    "day_of_week_numeric": 3,
-    "hour_of_day": 19,
-    "price_range": "Mid-range",
-    "weather_condition": "Clear",
-    "temperature": 22.5
-  }'
-```
-
-
-
+For technical issues or enhancements, refer to code comments in `app.py` or open an issue on the [GitHub repository](https://github.com/chamseddinedoulaEsprit/CRISP-DM-DataSet-Temps-de-livraison).
