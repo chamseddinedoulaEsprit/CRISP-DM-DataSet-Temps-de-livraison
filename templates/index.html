@@ -12,9 +12,7 @@
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .container {
-            padding: 2rem 0;
-        }
+        .container { padding: 2rem 0; }
         .card {
             border: none;
             border-radius: 15px;
@@ -49,21 +47,10 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-        .result-card {
-            margin-top: 2rem;
-            animation: slideIn 0.5s ease-in-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .loading {
-            display: none;
-        }
-        .spinner-border {
-            width: 2rem;
-            height: 2rem;
-        }
+        .result-card { margin-top: 2rem; animation: slideIn 0.5s ease-in-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .loading { display: none; }
+        .spinner-border { width: 2rem; height: 2rem; }
         .result-item {
             background: #f8f9fa;
             border-radius: 10px;
@@ -89,148 +76,105 @@
                     </div>
                     <div class="card-body">
                         <form id="predictionForm">
+                            <!-- Market & Store -->
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="market_id" class="form-label">
-                                            <i class="fas fa-store me-1"></i>ID Marché
-                                        </label>
-                                        <input type="number" class="form-control" id="market_id" name="market_id" value="1" min="1" required>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="market_id" class="form-label"><i class="fas fa-map-marker-alt me-1"></i>Marché</label>
+                                    <select class="form-select" id="market_id" name="market_id" required>
+                                        {% for market_id, (city, coords) in market_ids.items() %}
+                                        <option value="{{ market_id }}" {% if loop.first %}selected{% endif %}>{{ city }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="store_id" class="form-label">
-                                            <i class="fas fa-shop me-1"></i>ID Magasin
-                                        </label>
-                                        <input type="number" class="form-control" id="store_id" name="store_id" value="1" min="1" required>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="store_id" class="form-label"><i class="fas fa-shop me-1"></i>Magasin</label>
+                                    <select class="form-select" id="store_id" name="store_id" required>
+                                        {% for store in store_ids %}
+                                        <option value="{{ store }}">{{ store_mapping[store]['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
 
+                            <!-- Category & Price Range -->
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="store_primary_category" class="form-label">
-                                            <i class="fas fa-tags me-1"></i>Catégorie du Magasin
-                                        </label>
-                                        <select class="form-select" id="store_primary_category" name="store_primary_category" required>
-                                            {% for category in store_categories %}
-                                            <option value="{{ category }}">{{ category }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="store_primary_category" class="form-label"><i class="fas fa-tags me-1"></i>Catégorie du Magasin</label>
+                                    <select class="form-select" id="store_primary_category" name="store_primary_category" required>
+                                        {% for category in store_categories %}
+                                        <option value="{{ category }}">{{ category }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="price_range" class="form-label">
-                                            <i class="fas fa-euro-sign me-1"></i>Gamme de Prix
-                                        </label>
-                                        <select class="form-select" id="price_range" name="price_range" required>
-                                            {% for range in price_ranges %}
-                                            <option value="{{ range }}">{{ range }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="price_range" class="form-label"><i class="fas fa-euro-sign me-1"></i>Gamme de Prix</label>
+                                    <select class="form-select" id="price_range" name="price_range" required>
+                                        {% for range in price_ranges %}
+                                        <option value="{{ range }}" {% if loop.first %}selected{% endif %}>{{ range }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
 
+                            <!-- Items -->
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="total_items" class="form-label">
-                                            <i class="fas fa-shopping-cart me-1"></i>Total Articles
-                                        </label>
-                                        <input type="number" class="form-control" id="total_items" name="total_items" value="1" min="1" required>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="total_items" class="form-label"><i class="fas fa-shopping-cart me-1"></i>Total Articles</label>
+                                    <input type="number" class="form-control" id="total_items" name="total_items" value="1" min="1" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="num_distinct_items" class="form-label">
-                                            <i class="fas fa-list me-1"></i>Articles Distincts
-                                        </label>
-                                        <input type="number" class="form-control" id="num_distinct_items" name="num_distinct_items" value="1" min="1" required>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="num_distinct_items" class="form-label"><i class="fas fa-list me-1"></i>Articles Distincts</label>
+                                    <input type="number" class="form-control" id="num_distinct_items" name="num_distinct_items" value="1" min="1" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="subtotal" class="form-label">
-                                            <i class="fas fa-calculator me-1"></i>Sous-total (€)
-                                        </label>
-                                        <input type="number" class="form-control" id="subtotal" name="subtotal" value="10" min="0" step="0.01" required>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="subtotal" class="form-label"><i class="fas fa-calculator me-1"></i>Sous-total (€)</label>
+                                    <input type="number" class="form-control" id="subtotal" name="subtotal" value="10" min="0" step="0.01" required>
                                 </div>
                             </div>
 
+                            <!-- Delivery & Partners -->
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="total_onshift_partners" class="form-label">
-                                            <i class="fas fa-users me-1"></i>Livreurs Disponibles
-                                        </label>
-                                        <input type="number" class="form-control" id="total_onshift_partners" name="total_onshift_partners" value="5" min="1" required>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="total_onshift_partners" class="form-label"><i class="fas fa-users me-1"></i>Livreurs Disponibles</label>
+                                    <input type="number" class="form-control" id="total_onshift_partners" name="total_onshift_partners" value="5" min="1" required>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="delivery_duration_min" class="form-label">
-                                            <i class="fas fa-clock me-1"></i>Durée Estimée (min)
-                                        </label>
-                                        <input type="number" class="form-control" id="delivery_duration_min" name="delivery_duration_min" value="30" min="1" required>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="weather_condition" class="form-label"><i class="fas fa-cloud-sun me-1"></i>Condition Météo</label>
+                                    <select class="form-select" id="weather_condition" name="weather_condition" required>
+                                        {% for condition in weather_conditions %}
+                                        <option value="{{ condition }}" {% if loop.first %}selected{% endif %}>{{ condition }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
 
+                            <!-- Time & Weather -->
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="day_of_week_numeric" class="form-label">
-                                            <i class="fas fa-calendar me-1"></i>Jour de la Semaine
-                                        </label>
-                                        <select class="form-select" id="day_of_week_numeric" name="day_of_week_numeric" required>
-                                            <option value="1">Lundi</option>
-                                            <option value="2">Mardi</option>
-                                            <option value="3">Mercredi</option>
-                                            <option value="4">Jeudi</option>
-                                            <option value="5">Vendredi</option>
-                                            <option value="6">Samedi</option>
-                                            <option value="7">Dimanche</option>
-                                        </select>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="day_of_week_numeric" class="form-label"><i class="fas fa-calendar me-1"></i>Jour de la Semaine</label>
+                                    <select class="form-select" id="day_of_week_numeric" name="day_of_week_numeric" required>
+                                        <option value="1">Lundi</option>
+                                        <option value="2">Mardi</option>
+                                        <option value="3">Mercredi</option>
+                                        <option value="4">Jeudi</option>
+                                        <option value="5">Vendredi</option>
+                                        <option value="6">Samedi</option>
+                                        <option value="7">Dimanche</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="hour_of_day" class="form-label">
-                                            <i class="fas fa-clock me-1"></i>Heure (0-23)
-                                        </label>
-                                        <input type="number" class="form-control" id="hour_of_day" name="hour_of_day" value="12" min="0" max="23" required>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="hour_of_day" class="form-label"><i class="fas fa-clock me-1"></i>Heure (0-23)</label>
+                                    <input type="number" class="form-control" id="hour_of_day" name="hour_of_day" value="12" min="0" max="23" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="temperature" class="form-label">
-                                            <i class="fas fa-thermometer-half me-1"></i>Température (°C)
-                                        </label>
-                                        <input type="number" class="form-control" id="temperature" name="temperature" value="20" step="0.1" required>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="temperature" class="form-label"><i class="fas fa-thermometer-half me-1"></i>Température (°C)</label>
+                                    <input type="number" class="form-control" id="temperature" name="temperature" value="20" step="0.1" required>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="weather_condition" class="form-label">
-                                    <i class="fas fa-cloud-sun me-1"></i>Condition Météo
-                                </label>
-                                <select class="form-select" id="weather_condition" name="weather_condition" required>
-                                    {% for condition in weather_conditions %}
-                                    <option value="{{ condition }}">{{ condition }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
+                            <!-- Submit -->
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-magic me-2"></i>Prédire
-                                </button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-magic me-2"></i>Prédire</button>
                                 <div class="loading mt-3">
                                     <div class="spinner-border text-primary" role="status">
                                         <span class="visually-hidden">Chargement...</span>
@@ -240,6 +184,7 @@
                             </div>
                         </form>
 
+                        <!-- Results -->
                         <div id="results" class="result-card" style="display: none;">
                             <div class="card">
                                 <div class="card-header">
@@ -258,115 +203,140 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Store mapping from backend
+        const storeMapping = {{ store_mapping | tojson }};
+        const marketIds = {{ market_ids | tojson }};
+
+        // Get DOM elements
+        const marketSelect = document.getElementById('market_id');
+        const storeSelect = document.getElementById('store_id');
+        const categorySelect = document.getElementById('store_primary_category');
+
+        // Function to filter stores by market
+        function filterStoresByMarket(marketId) {
+            const selectedCity = marketIds[marketId][0];
+            storeSelect.innerHTML = '';
+            Object.entries(storeMapping).forEach(([storeId, storeInfo]) => {
+                if (storeInfo.city === selectedCity) {
+                    const option = document.createElement('option');
+                    option.value = storeId;
+                    option.textContent = storeInfo.name;
+                    storeSelect.appendChild(option);
+                }
+            });
+            // Auto-select first store and update category
+            if (storeSelect.options.length > 0) {
+                storeSelect.value = storeSelect.options[0].value;
+                updateCategory(storeSelect.value);
+            }
+        }
+
+        // Function to update market based on store selection
+        function updateMarketByStore(storeId) {
+            const storeCity = storeMapping[storeId].city;
+            for (let [marketId, [city, coords]] of Object.entries(marketIds)) {
+                if (city === storeCity) {
+                    marketSelect.value = marketId;
+                    break;
+                }
+            }
+            updateCategory(storeId);
+        }
+
+        // Function to update store category based on store selection
+        function updateCategory(storeId) {
+            const category = storeMapping[storeId].category;
+            categorySelect.value = category;
+        }
+
+        // Event listener for market selection
+        marketSelect.addEventListener('change', function() {
+            filterStoresByMarket(this.value);
+        });
+
+        // Event listener for store selection
+        storeSelect.addEventListener('change', function() {
+            updateMarketByStore(this.value);
+        });
+
+        // Initial filter based on default market
+        filterStoresByMarket(marketSelect.value);
+
+        // Form submission
         document.getElementById('predictionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Afficher le spinner de chargement
             document.querySelector('.loading').style.display = 'block';
             document.querySelector('button[type="submit"]').disabled = true;
             document.getElementById('results').style.display = 'none';
-            
-            // Collecter les données du formulaire
+
             const formData = new FormData(this);
             const data = {};
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
-            
+            for (let [key, value] of formData.entries()) { data[key] = value; }
+
             try {
                 const response = await fetch('/predict', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(data)
                 });
-                
                 const result = await response.json();
-                
-                // Masquer le spinner
                 document.querySelector('.loading').style.display = 'none';
                 document.querySelector('button[type="submit"]').disabled = false;
-                
-                // Afficher les résultats
                 displayResults(result);
-                
             } catch (error) {
                 document.querySelector('.loading').style.display = 'none';
                 document.querySelector('button[type="submit"]').disabled = false;
-                
                 displayError('Erreur de connexion: ' + error.message);
             }
         });
-        
+
         function displayResults(result) {
             const resultsDiv = document.getElementById('results');
             const contentDiv = document.getElementById('resultsContent');
-            
             if (result.success) {
                 let html = '';
                 const predictions = result.predictions;
-                
-                // Résultat LightGBM (temps de livraison)
                 if (predictions.delivery_time_minutes !== undefined) {
-                    html += `
-                        <div class="result-item">
-                            <h6><i class="fas fa-clock text-primary me-2"></i>Temps de Livraison Prédit</h6>
-                            <p class="mb-1"><strong>${predictions.delivery_time_minutes} minutes</strong></p>
-                            <p class="text-muted mb-0">${predictions.delivery_time_formatted}</p>
-                        </div>
-                    `;
+                    html += `<div class="result-item">
+                                <h6><i class="fas fa-clock text-primary me-2"></i>Temps de Livraison Prédit</h6>
+                                <p class="mb-1"><strong>${predictions.delivery_time_minutes} minutes</strong></p>
+                                <p class="text-muted mb-0">${predictions.delivery_time_formatted}</p>
+                             </div>`;
                 }
-                
                 if (predictions.delivery_time_error) {
-                    html += `
-                        <div class="result-item error-alert">
-                            <h6><i class="fas fa-exclamation-triangle me-2"></i>Erreur LightGBM</h6>
-                            <p class="mb-0">${predictions.delivery_time_error}</p>
-                        </div>
-                    `;
+                    html += `<div class="result-item error-alert">
+                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Erreur LightGBM</h6>
+                                <p class="mb-0">${predictions.delivery_time_error}</p>
+                             </div>`;
                 }
-                
-                // Résultat DBSCAN (clustering)
                 if (predictions.cluster !== undefined) {
-                    html += `
-                        <div class="result-item">
-                            <h6><i class="fas fa-layer-group text-success me-2"></i>Analyse de Cluster</h6>
-                            <p class="mb-1"><strong>Cluster ${predictions.cluster}</strong></p>
-                            <p class="text-muted mb-0">${predictions.cluster_interpretation}</p>
-                        </div>
-                    `;
+                    html += `<div class="result-item">
+                                <h6><i class="fas fa-layer-group text-success me-2"></i>Analyse de Cluster</h6>
+                                <p class="mb-1"><strong>Cluster ${predictions.cluster}</strong></p>
+                                <p class="text-muted mb-0">${predictions.cluster_interpretation}</p>
+                             </div>`;
                 }
-                
                 if (predictions.cluster_error) {
-                    html += `
-                        <div class="result-item error-alert">
-                            <h6><i class="fas fa-exclamation-triangle me-2"></i>Erreur DBSCAN</h6>
-                            <p class="mb-0">${predictions.cluster_error}</p>
-                        </div>
-                    `;
+                    html += `<div class="result-item error-alert">
+                                <h6><i class="fas fa-exclamation-triangle me-2"></i>Erreur DBSCAN</h6>
+                                <p class="mb-0">${predictions.cluster_error}</p>
+                             </div>`;
                 }
-                
                 contentDiv.innerHTML = html;
             } else {
                 displayError(result.error);
                 return;
             }
-            
             resultsDiv.style.display = 'block';
         }
-        
+
         function displayError(errorMessage) {
             const resultsDiv = document.getElementById('results');
             const contentDiv = document.getElementById('resultsContent');
-            
-            contentDiv.innerHTML = `
-                <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <strong>Erreur:</strong> ${errorMessage}
-                </div>
-            `;
-            
+            contentDiv.innerHTML = `<div class="alert alert-danger" role="alert">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        <strong>Erreur:</strong> ${errorMessage}
+                                     </div>`;
             resultsDiv.style.display = 'block';
         }
     </script>

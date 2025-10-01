@@ -1,0 +1,47 @@
+import pandas as pd
+import joblib
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import DBSCAN
+from lightgbm import LGBMRegressor
+
+# Load or recreate your training data (replace with your full dataset)
+training_data = pd.DataFrame({
+    'market_id': [-1.297689, -0.641180, -0.641180, -1.297689, -1.297689],
+    'store_id': [1.179428, 1.394996, 1.394996, 1.375665, 1.375665],
+    'store_primary_category': [-1.527756, 0.500396, 0.005725, 0.104659, 0.104659],
+    'total_items': [0.296221, -0.810458, 0.296221, -0.810458, -0.441565],
+    'subtotal': [0.414986, -0.427762, 1.142342, -0.632844, 0.512878],
+    'num_distinct_items': [0.810260, -1.024329, 0.198731, -1.024329, -0.412799],
+    'total_onshift_partners': [-0.216008, -1.312847, -1.099573, -1.190976, -1.190976],
+    'delivery_duration_min': [62.983333, 67.066667, 26.433333, 37.883333, 49.800000],
+    'day_of_week_numeric': [0.381614, -1.084738, -1.573522, -0.107170, -1.084738],
+    'hour_of_day': [1.561964, 1.446556, -0.977012, -0.630788, -0.746196],
+    'price_range': [0.405122, -0.916860, 0.602838, -0.916860, 0.575701],
+    'weather_condition': [0.655432, 0.655432, 0.655432, -1.574114, 1.027023],
+    'temperature': [0.858546, -1.433813, -0.323082, 0.787649, 0.456793]
+})
+
+# Features and target
+X = training_data.drop(columns=['delivery_duration_min'])
+y = training_data['delivery_duration_min']
+
+# Apply scaling
+scaler = StandardScaler()
+X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+
+# Train LightGBM
+lightgbm_model = LGBMRegressor()
+lightgbm_model.fit(X_scaled, y)
+
+# Train DBSCAN
+dbscan_model = DBSCAN(eps=0.5, min_samples=5)
+dbscan_model.fit(X_scaled)
+
+# Save models and scaler
+joblib.dump(lightgbm_model, 'lightgbm_model.pkl')
+joblib.dump(dbscan_model, 'dbscan_model.pkl')
+joblib.dump(scaler, 'scaler.pkl')
+
+# Verify DBSCAN clusters
+clusters = dbscan_model.fit_predict(X_scaled)
+print("Cluster counts:", pd.Series(clusters).value_counts())
